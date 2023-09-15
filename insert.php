@@ -7,15 +7,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $preparationTime = $_POST['preparationTime'];
     $difficultyLevel = $_POST['difficultyLevel'];
 
-    $sql = "INSERT INTO demo (recipe_name, ingredients, preparation_time, difficulty_level) VALUES ('$recipeName', '$ingredients', '$preparationTime', '$difficultyLevel')";
+    $sql = "INSERT INTO demo (recipe_name, ingredients, preparation_time, difficulty_level) VALUES (?, ?, ?, ?)";
 
-    if ($conn->query($sql) === TRUE) {
-        echo "Record inserted successfully.";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssss", $recipeName, $ingredients, $preparationTime, $difficultyLevel);
+
+    if ($stmt->execute()) {
+        $lastInsertedId = $stmt->insert_id;
+        $result = $conn->query("SELECT * FROM demo WHERE id = $lastInsertedId");
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            echo json_encode($row);
+        } else {
+            echo json_encode(['error' => 'Data not found.']);
+        }
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo json_encode(['error' => $stmt->error]);
     }
 } else {
-    echo "No data submitted.";
+    echo json_encode(['error' => 'No data submitted.']);
 }
 
+$stmt->close();
 $conn->close();

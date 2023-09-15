@@ -9,6 +9,7 @@ select {
     padding: 0;
     border: 0;
     font-family: Arial, sans-serif;
+    font-size: 13px;
 }
 
 
@@ -69,4 +70,27 @@ input[type="submit"] {
 input[type="submit"]:hover {
     background-color: #46b8da;
 
+}
+
+
+.github a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+    text-align: center;
+}
+
+
+.github a:hover {
+    background-color: #444;
+    transition: background-color 0.3s ease;
+}
+
+.github a {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }

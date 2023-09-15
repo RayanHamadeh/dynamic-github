@@ -10,7 +10,7 @@
 <body>
     <h1>Recipe Database</h1>
 
-    <form action="insert.php" method="post">
+    <form id="recipeForm">
         <h2>Add a New Recipe</h2>
 
         <label for="recipeName">Recipe Name:</label>
@@ -32,9 +32,14 @@
         <input type="submit" value="Insert Recipe">
     </form>
 
+    <ul id="insertedData"></ul>
+
+    <section class="github">
+        <a href="https://github.com/RayanHamadeh/dynamic-github">GitHub</a>
+    </section>
 
 
-    <script src=".//js/demo.js"></script>
+    <script src="./js/demo.js"></script>
 </body>
 
 </html>
