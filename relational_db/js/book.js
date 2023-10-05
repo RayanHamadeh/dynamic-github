@@ -26,6 +26,7 @@ function displayBookList(data) {
       <h3>${book.title}</h3>
       <p>Author: ${book.name}</p>
       <p>Publication Year: ${book.publication_year}</p>
+      <button class="delete-button">Delete</button>
     `;
     bookListContainer.appendChild(bookItem);
   });
@@ -40,8 +41,9 @@ async function handleAddBook(event) {
 
   try {
     // Fetch the authorID based on the author's name
-    const authorName = formData.get("author");
+    const authorName = formData.get("author_name");
     const authorID = await getAuthorID(authorName);
+    console.log(authorID);
 
     if (authorID !== null) {
       // Add authorID to formData
@@ -57,8 +59,16 @@ async function handleAddBook(event) {
       }
 
       const result = await response.json();
+      console.log(JSON.stringify(result));
+      if (result) {
+        console.log("result");
+      }
 
-      if (result && result.success) {
+      if (result["success"]) {
+        console.log("result.sucess");
+      }
+
+      if (result) {
         fetchAndDisplayBookList(); // Refresh the displayed book list
         document.querySelector("#book-form").reset(); // Clear the form fields
       } else if (result && result.error) {
@@ -71,6 +81,39 @@ async function handleAddBook(event) {
     }
   } catch (error) {
     console.error("Error adding book:", error);
+  }
+}
+
+// Function to fetch the authorID based on the author's name
+async function getAuthorID(authorName) {
+  const url = "app/get_author_id.php";
+  const formData = new FormData();
+  formData.append("authorName", authorName);
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const result = await response.json();
+
+    if (result && result.authorID) {
+      return result.authorID;
+    } else if (result && result.error) {
+      console.error("Error fetching author ID:", result.error);
+      return null;
+    } else {
+      console.error("Unknown error occurred.");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching author ID:", error);
+    return null;
   }
 }
 
